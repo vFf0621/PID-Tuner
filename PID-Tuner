@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov 30 22:22:05 2020
+
+@author: fguan
+"""
+import torch
+import time
+from torch import optim
+from typing import Tuple, Callable
+
+def PIDTuner(loss: Callable, iteration: int) -> None:
+    """PID tuner for generic PID systems."""
+    P = torch.tensor(50, requires_grad=True)
+    I = torch.tensor(40, requires_grad=True)
+    D = torch.tensor(20, requires_grad=True)
+    optimizer = optim.Adam([P, I, D], lr=0.1)
+    for i in range(iteration):
+        optimizer.zero_grad()
+        loss = loss(P, I, D) ** 2
+        time.sleep(2)
+        loss.backward()
+        optimizer.step()
+
